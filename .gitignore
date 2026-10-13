@@ -1,0 +1,11 @@
+# Android / Gradle build output
+.gradle/
+build/
+app/build/
+local.properties
+*.apk
+*.iml
+.idea/
+
+# Rust build output
+sim/target*/

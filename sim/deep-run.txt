@@ -1,0 +1,94 @@
+Minesweeper simulation: 9x9 field, 30 mines, 16 threads
+player: exact logic; optimal search once <= 300 layouts remain; move-by-move playouts up to 3000 layouts; otherwise safest cell
+
+=== 9x9, 30 mines, first dig at row 4, column 4 ===
+games played        400000   (223.2s, 1792 games/s)
+games won           15346
+win rate             3.8365%  (95% CI 3.7774% - 3.8965%)
+  about 1 win in 26 games
+won without a single guess   265  (0.0663% of games)
+forced guesses per game      4.00
+average risk of a guess      24.0% chance of hitting a mine
+board cleared at death       55.5% of the safe cells on average
+losses by the guess that killed (share of all games):
+  guess   1    19.003%
+  guess   2    18.235%
+  guess   3    15.281%
+  guess   4    12.036%
+  guess   5     9.175%
+  guess   6     6.870%
+  guess   7     5.012%
+  guess   8     3.569%
+  guess   9     2.434%
+  guess  10     1.622%
+  guess  11     1.083%
+  guess  12     0.732%
+  guess  13     0.445%
+  guess  14     0.276%
+  guess 15+     0.391%
+wins by number of guesses survived (share of wins):
+    0 guesses     1.73%
+    1 guesses     3.83%
+    2 guesses     6.66%
+    3 guesses     9.02%
+    4 guesses    10.90%
+    5 guesses    10.73%
+    6 guesses    10.29%
+    7 guesses     9.66%
+    8 guesses     9.32%
+    9 guesses     7.33%
+   10 guesses     6.13%
+   11 guesses     4.44%
+   12 guesses     3.40%
+   13 guesses     2.36%
+   14 guesses     1.49%
+  15+ guesses     2.72%
+endgame searches    165020  (fell back to safest-cell: 0)
+self-check          deaths predicted from the risks taken: 384519, actual: 384654
+Minesweeper simulation: 9x9 field, 30 mines, 16 threads
+player: exact logic; optimal search once <= 300 layouts remain; move-by-move playouts up to 30000 layouts; otherwise safest cell
+
+=== 9x9, 30 mines, first dig at row 4, column 4 ===
+games played        100000   (724.3s, 138 games/s)
+games won           4225
+win rate             4.2250%  (95% CI 4.1021% - 4.3514%)
+  about 1 win in 24 games
+won without a single guess   69  (0.0690% of games)
+forced guesses per game      3.98
+average risk of a guess      24.2% chance of hitting a mine
+board cleared at death       55.3% of the safe cells on average
+losses by the guess that killed (share of all games):
+  guess   1    19.247%
+  guess   2    18.096%
+  guess   3    15.248%
+  guess   4    12.037%
+  guess   5     9.193%
+  guess   6     6.789%
+  guess   7     4.971%
+  guess   8     3.530%
+  guess   9     2.337%
+  guess  10     1.585%
+  guess  11     1.025%
+  guess  12     0.666%
+  guess  13     0.430%
+  guess  14     0.263%
+  guess 15+     0.358%
+wins by number of guesses survived (share of wins):
+    0 guesses     1.63%
+    1 guesses     3.72%
+    2 guesses     6.77%
+    3 guesses     9.02%
+    4 guesses    10.58%
+    5 guesses    11.17%
+    6 guesses    10.70%
+    7 guesses     9.56%
+    8 guesses     7.91%
+    9 guesses     7.76%
+   10 guesses     6.06%
+   11 guesses     4.64%
+   12 guesses     3.50%
+   13 guesses     2.75%
+   14 guesses     1.35%
+  15+ guesses     2.89%
+endgame searches    58643  (fell back to safest-cell: 0)
+self-check          deaths predicted from the risks taken: 96431, actual: 95775

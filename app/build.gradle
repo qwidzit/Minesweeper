@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.minesweeper.archive'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.minesweeper.archive'
+        minSdk 26
+        // 34 keeps the classic (non edge-to-edge) window, so the page never sits under the system bars
+        targetSdk 34
+        versionCode 2
+        versionName '1.1'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

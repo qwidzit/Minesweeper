@@ -1,0 +1,154 @@
+import pygame
+import random
+ 
+pygame.init()
+W, H = 360, 430
+screen = pygame.display.set_mode((W, H))
+ 
+GRID = 9
+MINES = 10
+TOP = 55
+CELL = (W - 20) // GRID
+OX = (W - GRID * CELL) // 2
+OY = TOP + 5
+ 
+field = [[0]*GRID for _ in range(GRID)]
+revealed = [[False]*GRID for _ in range(GRID)]
+flagged = [[False]*GRID for _ in range(GRID)]
+game_over = False
+win = False
+first_click = True
+flag_mode = False
+ 
+NUM_COLORS = [
+    None, (0,0,200), (0,128,0), (200,0,0),
+    (0,0,128), (128,0,0), (0,128,128), (0,0,0), (128,128,128),
+]
+ 
+def place_mines(sr, sc):
+    global field
+    field = [[0]*GRID for _ in range(GRID)]
+    m = 0
+    while m < MINES:
+        r, c = random.randint(0,GRID-1), random.randint(0,GRID-1)
+        if field[r][c] == -1 or (abs(r-sr)<=1 and abs(c-sc)<=1): continue
+        field[r][c] = -1
+        m += 1
+    for r in range(GRID):
+        for c in range(GRID):
+            if field[r][c] == -1: continue
+            cnt = 0
+            for dr in (-1,0,1):
+                for dc in (-1,0,1):
+                    nr, nc = r+dr, c+dc
+                    if 0<=nr<GRID and 0<=nc<GRID and field[nr][nc]==-1:
+                        cnt += 1
+            field[r][c] = cnt
+ 
+def reveal(r, c):
+    if revealed[r][c] or flagged[r][c]: return
+    revealed[r][c] = True
+    if field[r][c] == 0:
+        for dr in (-1,0,1):
+            for dc in (-1,0,1):
+                nr, nc = r+dr, c+dc
+                if 0<=nr<GRID and 0<=nc<GRID:
+                    reveal(nr, nc)
+ 
+def check_win():
+    for r in range(GRID):
+        for c in range(GRID):
+            if field[r][c] != -1 and not revealed[r][c]:
+                return False
+    return True
+ 
+def draw():
+    screen.fill((200, 200, 200))
+    font = pygame.font.Font(None, 26)
+    mines_left = MINES - sum(flagged[r][c] for r in range(GRID) for c in range(GRID))
+    screen.blit(font.render(f'Mines: {mines_left}', True, (180,0,0)), (10, 8))
+ 
+    btn_c = (255,200,100) if flag_mode else (180,180,180)
+    pygame.draw.rect(screen, btn_c, (W-105, 5, 95, 28), border_radius=5)
+    pygame.draw.rect(screen, (100,100,100), (W-105, 5, 95, 28), 2, border_radius=5)
+    bf = pygame.font.Font(None, 20)
+    bt = bf.render('Flag' if flag_mode else 'Dig', True, (50,50,50))
+    screen.blit(bt, bt.get_rect(center=(W-57, 19)))
+ 
+    if game_over:
+        screen.blit(font.render('Game Over! Tap to restart', True, (200,0,0)), (10, 33))
+    elif win:
+        screen.blit(font.render('You Win! Tap to restart', True, (0,150,0)), (10, 33))
+ 
+    for r in range(GRID):
+        for c in range(GRID):
+            x = OX + c * CELL
+            y = OY + r * CELL
+            if revealed[r][c]:
+                pygame.draw.rect(screen, (230,230,230), (x+1, y+1, CELL-2, CELL-2))
+                if field[r][c] == -1:
+                    pygame.draw.circle(screen, (0,0,0), (x+CELL//2, y+CELL//2), CELL//3)
+                elif field[r][c] > 0:
+                    nf = pygame.font.Font(None, CELL-4)
+                    nt = nf.render(str(field[r][c]), True, NUM_COLORS[field[r][c]])
+                    screen.blit(nt, nt.get_rect(center=(x+CELL//2, y+CELL//2)))
+            else:
+                pygame.draw.rect(screen, (170,170,170), (x+1, y+1, CELL-2, CELL-2))
+                pygame.draw.line(screen, (210,210,210), (x+1,y+1), (x+CELL-2,y+1), 2)
+                pygame.draw.line(screen, (210,210,210), (x+1,y+1), (x+1,y+CELL-2), 2)
+                pygame.draw.line(screen, (130,130,130), (x+CELL-2,y+1), (x+CELL-2,y+CELL-2), 2)
+                pygame.draw.line(screen, (130,130,130), (x+1,y+CELL-2), (x+CELL-2,y+CELL-2), 2)
+                if flagged[r][c]:
+                    ff = pygame.font.Font(None, CELL-6)
+                    ft = ff.render('F', True, (200,0,0))
+                    screen.blit(ft, ft.get_rect(center=(x+CELL//2, y+CELL//2)))
+pygame.display.flip()
+ 
+draw()
+ 
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            tx, ty = event.pos
+            if 5 <= ty <= 33 and W-105 <= tx <= W-10:
+                flag_mode = not flag_mode
+                draw()
+                continue
+            if game_over or win:
+                field = [[0]*GRID for _ in range(GRID)]
+                revealed = [[False]*GRID for _ in range(GRID)]
+                flagged = [[False]*GRID for _ in range(GRID)]
+                game_over = False
+                win = False
+                first_click = True
+                draw()
+                continue
+            c = (tx - OX) // CELL
+            r = (ty - OY) // CELL
+            if 0<=r<GRID and 0<=c<GRID:
+                if flag_mode:
+                    if not revealed[r][c]:
+                        flagged[r][c] = not flagged[r][c]
+                else:
+                    if not flagged[r][c]:
+                        if first_click:
+                            first_click = False
+                            place_mines(r, c)
+                            reveal(r, c)
+                        elif field[r][c] == -1:
+                            for rr in range(GRID):
+                                for cc in range(GRID):
+                                    if field[rr][cc] == -1:
+                                        revealed[rr][cc] = True
+                            game_over = True
+                        else:
+                            reveal(r, c)
+                        if not game_over:
+                            win = check_win()
+                draw()
+    pygame.time.wait(50)
+ 
+pygame.quit()

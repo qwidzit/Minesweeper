@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Minesweeper</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Shown once per app load: pick field size and mine count -->
+<section id="setup" class="screen">
+  <div class="setup-box">
+    <h1>Minesweeper</h1>
+    <div class="field-row">
+      <label for="inCols">Width</label>
+      <div class="stepper">
+        <button type="button" data-for="inCols" data-step="-1">&minus;</button>
+        <input id="inCols" type="number" inputmode="numeric" value="9">
+        <button type="button" data-for="inCols" data-step="1">+</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="inRows">Height</label>
+      <div class="stepper">
+        <button type="button" data-for="inRows" data-step="-1">&minus;</button>
+        <input id="inRows" type="number" inputmode="numeric" value="9">
+        <button type="button" data-for="inRows" data-step="1">+</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="inMines">Mines</label>
+      <div class="stepper">
+        <button type="button" data-for="inMines" data-step="-1">&minus;</button>
+        <input id="inMines" type="number" inputmode="numeric" value="30">
+        <button type="button" data-for="inMines" data-step="1">+</button>
+      </div>
+    </div>
+    <p id="setupHint" class="hint"></p>
+    <p id="setupBest" class="hint best"></p>
+    <button id="btnStart" type="button" class="btn primary">Start</button>
+    <button id="btnSetupArchive" type="button" class="btn">Archive</button>
+  </div>
+</section>
+
+<section id="game" class="screen" hidden>
+  <header id="topbar">
+    <button id="btnMenu" type="button" class="iconbtn" aria-label="Pause">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg>
+    </button>
+    <div id="counter">
+      <svg viewBox="0 0 24 24" width="22" height="22"><g stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2.5v19M2.5 12h19M5.3 5.3l13.4 13.4M18.7 5.3L5.3 18.7"/></g><circle cx="12" cy="12" r="6.2"/></svg>
+      <span id="minesLeft">0</span>
+    </div>
+    <button id="btnRestart" type="button" class="iconbtn" aria-label="Restart">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg>
+    </button>
+  </header>
+  <div id="status"></div>
+  <main id="stage"><canvas id="board"></canvas></main>
+  <footer id="bottombar">
+    <button id="btnMode" type="button"></button>
+  </footer>
+</section>
+
+<!-- Pause menu: only ever opened by the pause button -->
+<div id="menu" class="overlay dim" hidden>
+  <div class="menu-box">
+    <h2>Paused</h2>
+    <button id="mResume" type="button" class="btn primary">Resume</button>
+    <button id="mRestart" type="button" class="btn">Restart</button>
+    <button id="mArchive" type="button" class="btn"></button>
+    <button id="mOpenArchive" type="button" class="btn">Open archive</button>
+    <button id="mExitReplay" type="button" class="btn">Back to random games</button>
+    <button id="mSetup" type="button" class="btn">Change field size / mines</button>
+    <button id="mTapRestart" type="button" class="btn toggle"></button>
+  </div>
+</div>
+
+<section id="archive" class="overlay solid" hidden>
+  <header class="bar">
+    <button id="aBack" type="button" class="iconbtn" aria-label="Back">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <h2>Archive</h2>
+  </header>
+  <div id="archiveList"></div>
+</section>
+
+<!-- A saved result: a static picture of the board at the end of a game -->
+<section id="viewer" class="overlay solid" hidden>
+  <header class="bar">
+    <button id="vBack" type="button" class="iconbtn" aria-label="Back">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="bar-text">
+      <div id="vTitle"></div>
+      <div id="vMeta"></div>
+    </div>
+  </header>
+  <div id="vStage"><canvas id="vCanvas"></canvas></div>
+  <footer class="viewer-actions">
+    <button id="vReplay" type="button" class="btn primary">Replay this field</button>
+    <button id="vDelete" type="button" class="btn danger">Delete result</button>
+  </footer>
+</section>
+
+<script src="game.js"></script>
+</body>
+</html>
